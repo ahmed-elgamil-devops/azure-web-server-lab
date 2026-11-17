@@ -1,0 +1,50 @@
+#cloud-config
+# Runs once, on the VM's first boot. Keeping the server's setup here means the VM
+# can be destroyed and rebuilt identically instead of being configured by hand.
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - nginx
+  - unattended-upgrades
+  - fail2ban
+
+write_files:
+  - path: /var/www/html/index.html
+    permissions: '0644'
+    content: |
+      <!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Azure Web Server Lab</title>
+          <style>
+            body { font-family: system-ui, sans-serif; margin: 4rem auto; max-width: 40rem;
+                   line-height: 1.6; color: #1f2933; }
+            code { background: #f0f2f5; padding: 0.1rem 0.3rem; border-radius: 3px; }
+          </style>
+        </head>
+        <body>
+          <h1>Azure Web Server Lab</h1>
+          <p>This page is served by Nginx on an Ubuntu VM in Azure.</p>
+          <p>The VM, its network, the storage account and the monitor alerts were all
+             created with Terraform. Nginx was installed by cloud-init on first boot.</p>
+          <p>Teardown is a single command: <code>terraform destroy</code>.</p>
+        </body>
+      </html>
+
+  # Keep only security updates automatic, so the lab does not drift on its own.
+  - path: /etc/apt/apt.conf.d/20auto-upgrades
+    permissions: '0644'
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+
+runcmd:
+  - systemctl enable --now nginx
+  - systemctl enable --now fail2ban
+  - mkdir -p /opt/scripts
+  - [ sh, -c, "echo 'Lab provisioned at' $(date -u) >> /var/log/weblab-provision.log" ]
+
+final_message: "Azure web server lab is up after $UPTIME seconds."

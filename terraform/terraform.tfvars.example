@@ -1,0 +1,14 @@
+# Copy this file to terraform.tfvars and fill in your own values.
+# terraform.tfvars is ignored by git, so your IP and e-mail stay out of the repository.
+
+# Your current public IP. Find it with:  curl ifconfig.me
+admin_source_ip = "203.0.113.25/32"
+
+# Where Azure Monitor sends alerts.
+alert_email = "you@example.com"
+
+# Optional overrides:
+# project             = "weblab"
+# location            = "uaenorth"
+# vm_size             = "Standard_B1s"
+# ssh_public_key_path = "~/.ssh/id_rsa.pub"

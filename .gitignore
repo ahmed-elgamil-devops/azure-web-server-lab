@@ -1,0 +1,16 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Never commit your own IP, e-mail or keys
+terraform.tfvars
+*.tfvars
+!*.tfvars.example
+*.pem
+*.key
+
+# Backup artefacts
+*.tar.gz
